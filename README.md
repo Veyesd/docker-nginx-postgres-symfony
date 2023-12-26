@@ -20,9 +20,9 @@ donc on rentre sur le nginx, sur le docker desktop,
 
 on va dans les containers clique sur **"nginx"** puis sur **"exec"** pour ouvrir son terminal,
 
-![Drag Racing](./screenshots/nginx.png) 
+![nginx](./screenshots/nginx.png) 
 
-![Drag Racing](./screenshots/exec.png) 
+![exec](./screenshots/exec.png) 
 
 puis rdv dans le "default.conf":
 
@@ -33,7 +33,7 @@ $ cd etc/nginx/conf.d/
 et ouvre avec nano:
 
 ```bash
-$ cd etc/nginx/conf.d/
+$ nano default.conf
 ```
 
 tout effacer (alt + supp depuis le bas pour aller plus vite)
