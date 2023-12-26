@@ -24,15 +24,6 @@ services:
     container_name: "nodejs"
     volumes:
       - ./nodejs:/www
-
-  # web:
-  #   build: .
-  #   ports:
-  #     - "80:8000"
-  #   depends_on:
-  #     db:
-  #       condition: service_healthy
-  #   command: ["python", "app.py"]
  
   db:
     image: postgres
@@ -55,8 +46,3 @@ services:
 volumes:
   nginx_conf:
   pgdata:
-  # adminer:
-  #   image: adminer
-  #   restart: always
-  #   ports:
-  #     - 8080:8080
