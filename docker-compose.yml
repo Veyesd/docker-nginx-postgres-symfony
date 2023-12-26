@@ -1,0 +1,62 @@
+version: '3'
+
+services:
+
+  nginx:
+    build: images/nginx/
+    container_name: "nginx"
+    privileged: true
+    volumes:
+      - nginx_conf:/etc/nginx/
+      - ./php:/www
+    ports:
+      - "80:80"
+      - "81:81"
+
+  php:
+    build: images/php/
+    container_name: "php"
+    volumes:
+      - ./php:/www
+
+  node:
+    build: images/node/
+    container_name: "nodejs"
+    volumes:
+      - ./nodejs:/www
+
+  # web:
+  #   build: .
+  #   ports:
+  #     - "80:8000"
+  #   depends_on:
+  #     db:
+  #       condition: service_healthy
+  #   command: ["python", "app.py"]
+ 
+  db:
+    image: postgres
+    container_name: "postgres"
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: mysecretpassword
+      POSTGRES_DB: postgres
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 1s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  nginx_conf:
+  pgdata:
+  # adminer:
+  #   image: adminer
+  #   restart: always
+  #   ports:
+  #     - 8080:8080
