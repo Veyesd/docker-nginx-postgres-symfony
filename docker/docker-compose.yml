@@ -6,8 +6,8 @@ services:
     image: postgres:12
     restart: always
     environment:
-        POSTGRES_PASSWORD: password
-        POSTGRES_DB: dbtest
+        POSTGRES_PASSWORD: mysecretpassword
+        POSTGRES_DB: postgres
     ports:
         - 15432:5432
 
