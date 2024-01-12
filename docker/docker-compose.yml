@@ -4,32 +4,47 @@ services:
   db:
     container_name: db
     image: postgres:12
-    restart: always
+    restart: unless-stopped
     environment:
+        POSTGRES_USER: postgres
         POSTGRES_PASSWORD: mysecretpassword
         POSTGRES_DB: postgres
+    volumes:
+      - ./postgres/conf:/etc/postgresql
+      - postgres:/var/lib/postgresql/data
     ports:
-        - 15432:5432
+        - 5432:5432
+    expose:
+        - "5432"
+    networks:
+      - visiocours
 
   php-fpm:
     container_name: php-fpm
     build:
       context: ./php-fpm
-    restart: always
+    restart: unless-stopped
     depends_on:
       - db
     environment:
       - APP_ENV=${APP_ENV}
       - APP_SECRET=${APP_SECRET}
+      - POSTGRES_HOST=${POSTGRES_HOST:-localhost}
+      - POSTGRES_USER=${POSTGRES_USER:-postgres}
+      - POSTGRES_PASS=${POSTGRES_PASSWORD:-mysecretpassword}
+      - ENGINE_PATH=${ENGINE_PATH:-./visiocours-api}
+      - DOCKER_DIR=${DOCKER_DIR:-docker}
       - DATABASE_URL=${DATABASE_URL}
     volumes:
       - ./../visiocours-api/:/var/www
+    networks:
+      - visiocours
 
   nginx:
     container_name: nginx
     build:
       context: ./nginx
-    restart: always
+    restart: unless-stopped
     volumes:
       - ./../visiocours-api/:/var/www
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
@@ -41,5 +56,13 @@ services:
     ports:
       - "80:80"
       - "443:443"
+    networks:
+      - visiocours
+    
+volumes:
+  postgres:
 
-
+networks:
+  visiocours:
+    name: visiocours
+    external: true
