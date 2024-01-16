@@ -17,7 +17,7 @@ services:
     expose:
         - "5432"
     networks:
-      - visiocours
+      - symfony-networks
 
   php-fpm:
     container_name: php-fpm
@@ -32,13 +32,13 @@ services:
       - POSTGRES_HOST=${POSTGRES_HOST:-localhost}
       - POSTGRES_USER=${POSTGRES_USER:-postgres}
       - POSTGRES_PASS=${POSTGRES_PASSWORD:-mysecretpassword}
-      - ENGINE_PATH=${ENGINE_PATH:-./visiocours-api}
+      - ENGINE_PATH=${ENGINE_PATH:-./symfony}
       - DOCKER_DIR=${DOCKER_DIR:-docker}
       - DATABASE_URL=${DATABASE_URL}
     volumes:
-      - ./../visiocours-api/:/var/www
+      - ./../symfony/:/var/www
     networks:
-      - visiocours
+      - symfony-networks
 
   nginx:
     container_name: nginx
@@ -46,7 +46,7 @@ services:
       context: ./nginx
     restart: unless-stopped
     volumes:
-      - ./../visiocours-api/:/var/www
+      - ./../symfony/:/var/www
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
       - ./nginx/sites/:/etc/nginx/sites-available
       - ./nginx/conf.d/:/etc/nginx/conf.d
@@ -57,12 +57,12 @@ services:
       - "80:80"
       - "443:443"
     networks:
-      - visiocours
+      - symfony-networks
     
 volumes:
   postgres:
 
 networks:
-  visiocours:
-    name: visiocours
+  symfony-networks:
+    name: symfony-networks
     external: true
