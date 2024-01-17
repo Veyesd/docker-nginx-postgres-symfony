@@ -1,0 +1,7 @@
+_security_logout:
+    resource: security.route_loader.logout
+    type: service
+
+# _security_login:
+#     resource: security.route_loader.login
+#     type: controller

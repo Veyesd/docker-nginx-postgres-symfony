@@ -1,0 +1,13 @@
+controllers:
+    resource:
+        path: ../src/Controller/ApiController
+        namespace: App\Controller\ApiController
+    type: attribute
+    prefix: /api
+
+Logger:
+    resource:
+        path: ../src/Controller/AuthController
+        namespace: App\Controller\AuthController
+    type: attribute
+    prefix: /
