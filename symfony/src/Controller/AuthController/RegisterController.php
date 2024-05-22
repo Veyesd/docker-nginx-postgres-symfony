@@ -5,7 +5,7 @@ namespace App\Controller\AuthController;
 use App\Entity\User;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class RegisterController extends AbstractController
 {
     #[Route('/register', name: 'create_user', methods: ['POST'])]
-    public function register(Request $request, UserPasswordHasherInterface $passwordHasher, EntityManagerInterface $entityManager): Response
+    public function register(Request $request, UserPasswordHasherInterface $passwordHasher): Response
     {
         $parameters = json_decode($request->getContent(), true);
 
@@ -52,8 +52,8 @@ class RegisterController extends AbstractController
         // si validator => false
         // + email to check validation
 
-        $entityManager->persist($newUser);
-        $entityManager->flush();
+        $this->getEntityManager()->persist($newUser);
+        $this->getEntityManager()->flush();
 
         return new Response(
             'New user register!',

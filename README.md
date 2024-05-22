@@ -22,9 +22,9 @@ Si il n'y est pas il faut le créer.
 # ici le réseau est "symfony-networks"
 $ docker network create --driver=bridge --subnet=192.168.2.0/24 symfony-networks
 ```
-Vous pourriez avoir d'autres réseaux qui gênent la création de celui qu'on souhaite avoir. Vous auriez l'erreur.
+Vous pourriez avoir d'autres réseaux qui gênent la création de celui qu'on souhaite avoir.
 
-Vous pouvez réinitialiser vos réseaux.
+Vous pouvez clean vos réseaux.
 ```bash
 $ docker network prune
 ```
@@ -43,3 +43,16 @@ Vous pouvez utiliser Dbeaver pour check le contenu de votre bdd.
 
 /!\ Si vous constatez des problèmes lors de l'utilisation de Doctrine et du CLI vis à vis de la bdd, ou que vous désirez paramètrer la connexion à la bdd de symfony,
 N'oubliez pas de faire un tour aussi par le fichier .env de docker.
+
+
+
+## que trouverez vous sur la partie symfony?
+
+Les petites choses pratiques que j'ai pu voir pour se faciliter la vie.
+
+Comment on se dispense des injections de l'ORM et des services pour les rendre dispo via this et avoir des controller plus lisibles?
+Une contrôleur user basique. Il faudra activer le user en bdd pour pouvoir vous connecter une fois que vous l'aurez enregistré.
+L'api est testable et vous avez quelques endpoint de base.
+Un scheduler est lançable pour checker en continu les token de connexion et les remove
+
+D'autres améliorations à venir, je réfléchis à rendre cette API la plus facile à scale en faisant les fonctions les plus sèches possible.
