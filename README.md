@@ -1,4 +1,8 @@
-# docker symfony postgres starter pack
+# docker symfony postgres - secure api starter pack
+
+## pré-requis
+
+- le CLI docker et le client
 
 ## installation & configuration
 
@@ -82,3 +86,8 @@ vous devrez utiliser le mode Bearer Token de votre outil.
 
 
 D'autres améliorations à venir, je réfléchis à rendre cette API la plus facile à scale en faisant les fonctions les plus sèches possible.
+
+activer le scheduler
+```bash
+$ php bin/console messenger:consume -v scheduler_default
+```
