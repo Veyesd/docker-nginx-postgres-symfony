@@ -1,4 +1,4 @@
-# docker
+# docker symfony postgres starter pack
 
 ## installation & configuration
 
@@ -52,7 +52,33 @@ Les petites choses pratiques que j'ai pu voir pour se faciliter la vie.
 
 Comment on se dispense des injections de l'ORM et des services pour les rendre dispo via this et avoir des controller plus lisibles?
 Une contrôleur user basique. Il faudra activer le user en bdd pour pouvoir vous connecter une fois que vous l'aurez enregistré.
-L'api est testable et vous avez quelques endpoint de base.
-Un scheduler est lançable pour checker en continu les token de connexion et les remove
+L'api est testable et vous avez quelques endpoint de base, hors connexion:
+
+**/register**
+```json
+{
+    "email":"mail@gmail.com",
+    "password":"aze",
+    "firstname":"John",
+    "lastname":"Doe",
+    "admin":true
+}
+```
+**/login**
+```json
+{
+    "email":"mail@gmail.com",
+    "password":"aze",
+}
+```
+vous recevrez un token que vous devrez utiliser une fois connecté,
+vous devrez utiliser le mode Bearer Token de votre outil.
+
+**/api/user/all**
+
+**/api/user/{id}**
+
+**/api/user/{id}/roles**
+
 
 D'autres améliorations à venir, je réfléchis à rendre cette API la plus facile à scale en faisant les fonctions les plus sèches possible.
