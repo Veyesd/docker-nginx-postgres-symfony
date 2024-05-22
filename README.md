@@ -4,7 +4,7 @@
 
 Clonez simplement le repo dans un répertoire.
 
-puis dans le terminal dnass le répertoire de symfony lancez:
+puis dans le terminal dans le répertoire de symfony lancez:
 ```bash
 $ composer install
 ```
@@ -36,3 +36,10 @@ $ docker-compose up --build
 ```
 
 Vous pourrez constater le fonctionnement en allant simplement sur localhost, vous verrez la page d'accueil générique de symfony.
+
+
+Le postgres est configuré sur 127.0.0.1:5432
+Vous pouvez utiliser Dbeaver pour check le contenu de votre bdd.
+
+/!\ Si vous constatez des problèmes lors de l'utilisation de Doctrine et du CLI vis à vis de la bdd, ou que vous désirez paramètrer la connexion à la bdd de symfony,
+N'oubliez pas de faire un tour aussi par le fichier .env de docker.
