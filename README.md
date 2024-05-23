@@ -3,6 +3,8 @@
 ## pré-requis
 
 - le CLI docker et le client
+- un outils de requete POSTMAN ou INSOMNIA
+- un outils de visualisation de base de données comme DBeaver
 
 ## installation & configuration
 
@@ -47,8 +49,6 @@ Vous pouvez utiliser Dbeaver pour check le contenu de votre bdd.
 
 /!\ Si vous constatez des problèmes lors de l'utilisation de Doctrine et du CLI vis à vis de la bdd, ou que vous désirez paramètrer la connexion à la bdd de symfony,
 N'oubliez pas de faire un tour aussi par le fichier .env de docker.
-
-
 
 ## que trouverez vous sur la partie symfony?
 
