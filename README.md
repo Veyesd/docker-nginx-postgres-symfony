@@ -52,12 +52,22 @@ N'oubliez pas de faire un tour aussi par le fichier .env de docker.
 
 ## que trouverez vous sur la partie symfony?
 
-Les petites choses pratiques que j'ai pu voir pour se faciliter la vie.
 
+Un fois le bousin lancé, n'oublié de faire un petit coup de:
+```bash
+$ php bin/console doctrine:database:create
+```
+pour initialiser la bdd puis: 
+```bash
+$ php bin/console d:s:u --force
+```
+pour créer les tables nécessaires.
+
+Vous pourrez voir les petites choses pratiques que j'ai pu voir pour se faciliter la vie.
 Comment on se dispense des injections de l'ORM et des services pour les rendre dispo via this et avoir des controller plus lisibles?
-Il y'a un contrôleur user basique que j'étofferai plus tard, il faudra activer le user en bdd pour pouvoir vous connecter une fois que vous l'aurez enregistré.
-L'api est testable et vous avez quelques endpoint de base, hors connexion:
-
+Il y'a un contrôleur user basique que j'étofferai plus tard,
+en attendant pour activer l'utilisateur pour pouvoir accès à l'api, il faut toogle le is_active du user sur true directement en BDD.
+Il faut d'abord enregistrer l'utilisateur:
 **/register**
 ```json
 {
@@ -68,6 +78,7 @@ L'api est testable et vous avez quelques endpoint de base, hors connexion:
     "admin":true
 }
 ```
+Puis l'activer en bdd avant de vous connecter via:
 **/login**
 ```json
 {
@@ -76,9 +87,10 @@ L'api est testable et vous avez quelques endpoint de base, hors connexion:
 }
 ```
 Vous recevrez un token que vous devrez utiliser une fois connecté,
+
 Vous devrez utiliser le mode Bearer Token de votre outil.
-La sécurité de l'api est contrôlé par un handler qui check un token Bearer, sauf au login et logout,
-celui ci rafraîchit le token si il est valide, sinon il le détruit.
+La sécurité de l'api est contrôlé par un handler qui check un token Bearer,
+celui ci rafraîchit le token si il est valide, sinon il le détruit et demande la reconnexion.
 
 **/api/user/all**
 
