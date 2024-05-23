@@ -49,8 +49,7 @@ class RegisterController extends AbstractController
         $newUser->setCreationDate($now);
 
         $newUser->setIsActive(false);
-        // si validator => false
-        // + email to check validation
+        // TODO validator par email pour aciver le client
 
         $this->getEntityManager()->persist($newUser);
         $this->getEntityManager()->flush();

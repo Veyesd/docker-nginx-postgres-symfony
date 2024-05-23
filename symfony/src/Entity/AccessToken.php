@@ -76,16 +76,4 @@ class AccessToken
 
         return $this;
     }
-
-    public function isValid(): bool
-    {
-        /** @var DateTimeInterface */
-        $date = $this->getLastUpdate();
-        if (intval($date->sub(new DateInterval('PT60M'))->diff(new DateTime('now', new DateTimeZone('Europe/Paris')))->format('%i')) >= 15)
-        {
-            return false;
-        } else {
-            return true;
-        }
-    }
 }

@@ -1,10 +1,11 @@
 <?php
-// src/Security/AccessTokenHandler.php
+
 namespace App\Security;
 
 use App\Entity\User;
 use App\Repository\AccessTokenRepository;
 use App\Repository\UserRepository;
+use App\Service\JwtService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
@@ -20,8 +21,10 @@ class AccessTokenHandler implements AccessTokenHandlerInterface
         EntityManagerInterface $em,
         private AccessTokenRepository $repository,
         private UserRepository $userRepository,
-        private TokenStorageInterface $tokenStorage
+        private TokenStorageInterface $tokenStorage,
+        private JwtService $jwts
     ) {
+        $this->jwts = $jwts;
         $this->em = $em;
         $this->tokenStorage = $tokenStorage;
     }
@@ -29,18 +32,19 @@ class AccessTokenHandler implements AccessTokenHandlerInterface
     public function getUserBadgeFrom(string $accessToken): UserBadge
     {
         $accessToken = $this->repository->findOneByValue($accessToken);
-        if (null === $accessToken || !$accessToken->isValid()) {
+        if (null === $accessToken) {
             throw new BadCredentialsException('Invalid credentials.');
         }
 
         $user = $this->em->getRepository(User::class)->findOneByToken($accessToken->getId());
-        if (null === $user) {
+        $accessToken = $this->jwts->checkTokenValidityOrUpdate($user);
+
+        if ($user === null  || $accessToken === null) {
             $this->em->remove($accessToken);
             $this->em->flush();
             throw new CustomUserMessageAuthenticationException('User must to reconnect');
         }
-        $userIdentifier = $user->getEmail();
 
-        return new UserBadge($userIdentifier);
+        return new UserBadge($user->getEmail());
     }
 }

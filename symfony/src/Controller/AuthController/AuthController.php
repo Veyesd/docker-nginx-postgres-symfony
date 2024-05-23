@@ -4,11 +4,6 @@ namespace App\Controller\AuthController;
 
 use App\Entity\AccessToken;
 use App\Entity\User;
-use App\Service\JwtService;
-use DateInterval;
-use DateTime;
-use DateTimeZone;
-use Doctrine\ORM\EntityManagerInterface;
 use App\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,14 +13,8 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class AuthController extends AbstractController
 {
-    /**
-     * Durée de validité des tokens lorsqu'ils sont controllés dans ce controlleur
-     * @var int $tokenDurability
-     */
-    private $tokenDurability = 15;
-
     #[Route('/login', name: 'login', methods: ['POST'])]
-    public function login(UserPasswordHasherInterface $passwordHasher, Request $request, JwtService $jwts): Response
+    public function login(UserPasswordHasherInterface $passwordHasher, Request $request): Response
     {
         $parameters = json_decode($request->getContent(), true);
 
@@ -56,19 +45,11 @@ class AuthController extends AbstractController
         else {
             $accessToken = null;
             if ($user->getToken() !== null) {
-                $accessToken = $this->refreshToken($this->getEntityManager(), $user);
+                $accessToken = $this->jwts->checkTokenValidityOrUpdate($user);
             }
             if ($accessToken === null) {
-                $accessToken = new AccessToken();
-                $accessToken->setValue($jwts->generateToken($user));
-                $accessToken->setLastUpdate(new DateTime('now'));
-                $this->getEntityManager()->persist($accessToken);
+                $accessToken = $this->jwts->generateToken($user);
             }
-            $roles = $user->getRoles();
-            $roles[] = 'ROLE_CONNECTED';
-            $user->setRoles($roles);
-            $user->setToken($accessToken);
-            $this->getEntityManager()->flush();
 
             return new JsonResponse(['token' => $accessToken->getValue()], 200);
         }
@@ -81,10 +62,6 @@ class AuthController extends AbstractController
         $accessToken = $this->getEntityManager()->getRepository(AccessToken::class)->findOneByValue($token);
         $user = $this->getEntityManager()->getRepository(User::class)->findOneByToken($accessToken);
         $user->setToken(null);
-        $roles = $user->getRoles();
-        unset($roles[array_search("ROLE_CONNECTED", $user->getRoles())]);
-        $user->setRoles($roles);
-
         $this->getEntityManager()->remove($accessToken);
         $this->getEntityManager()->flush();
         //TODO: redirect to login
@@ -92,30 +69,5 @@ class AuthController extends AbstractController
             'logout',
             200            
         );
-    }
-
-    public function refreshToken(User $user)
-    {
-        $accessToken = $this->clearTokenIfOutdated($this->getEntityManager(), $user);
-        if($accessToken !== null){
-            $accessToken->setLastUpdate(new DateTime('now'));
-            $this->getEntityManager()->flush();
-        }
-
-        return $accessToken;
-    }
-
-    public function clearTokenIfOutdated(User $user)
-    {
-        $accessToken = $this->getEntityManager()->getRepository(AccessToken::class)->findOneByValue($user->getToken()->getValue());
-        if (intval($accessToken->getLastUpdate()->sub(new DateInterval('PT60M'))->diff(new DateTime('now', new DateTimeZone('Europe/Paris')))->format('%i')) >= $this->tokenDurability)
-        {
-            $user->setToken(null);
-            $this->getEntityManager()->remove($accessToken);
-            $this->getEntityManager()->flush();
-            return null;
-        } else {
-            return $accessToken;
-        }
     }
 }

@@ -12,11 +12,14 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-
+use Symfony\Component\Scheduler\Attribute\AsCronTask;
+use Symfony\Component\Scheduler\Attribute\AsPeriodicTask;
 #[AsCommand(
     name: 'app:token:clean',
     description: 'Add a short description for your command',
 )]
+#[AsCronTask(expression: '* * * * *')]
+#[AsPeriodicTask('1 minute', schedule: 'default')] 
 class TokenCleanCommand extends Command
 {
     private $accessTokenRepository;
@@ -46,15 +49,8 @@ class TokenCleanCommand extends Command
         // dd($tokens);
 
         foreach($tokens as $key => $token){
-            $accessToken = $this->accessTokenRepository->findOneByValue($token->getValue());
-            $user = $this->userRepository->findOneByToken($accessToken->getId());
-            $user->setToken(null);
-            $roles = $user->getRoles();
-            unset($roles[array_search("ROLE_CONNECTED", $user->getRoles())]);
-            $user->setRoles($roles);
-    
-            $this->em->remove($accessToken);
-            $this->em->flush();
+            $user = $this->userRepository->findOneByToken($token);
+            $this->accessTokenRepository->clearTokenIfOutdated($user);
         }
         // $arg1 = $input->getArgument('arg1');
         // if ($arg1) {
@@ -64,7 +60,7 @@ class TokenCleanCommand extends Command
         //     // ...
         // }
 
-        $io->success('You have a new command! Now make it your own! Pass --help to see your options.');
+        $io->success('Table de tokens clean!');
 
         return Command::SUCCESS;
     }

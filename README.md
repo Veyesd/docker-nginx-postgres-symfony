@@ -55,7 +55,7 @@ N'oubliez pas de faire un tour aussi par le fichier .env de docker.
 Les petites choses pratiques que j'ai pu voir pour se faciliter la vie.
 
 Comment on se dispense des injections de l'ORM et des services pour les rendre dispo via this et avoir des controller plus lisibles?
-Une contrôleur user basique. Il faudra activer le user en bdd pour pouvoir vous connecter une fois que vous l'aurez enregistré.
+Il y'a un contrôleur user basique que j'étofferai plus tard, il faudra activer le user en bdd pour pouvoir vous connecter une fois que vous l'aurez enregistré.
 L'api est testable et vous avez quelques endpoint de base, hors connexion:
 
 **/register**
@@ -75,8 +75,10 @@ L'api est testable et vous avez quelques endpoint de base, hors connexion:
     "password":"aze",
 }
 ```
-vous recevrez un token que vous devrez utiliser une fois connecté,
-vous devrez utiliser le mode Bearer Token de votre outil.
+Vous recevrez un token que vous devrez utiliser une fois connecté,
+Vous devrez utiliser le mode Bearer Token de votre outil.
+La sécurité de l'api est contrôlé par un handler qui check un token Bearer, sauf au login et logout,
+celui ci rafraîchit le token si il est valide, sinon il le détruit.
 
 **/api/user/all**
 
@@ -84,10 +86,9 @@ vous devrez utiliser le mode Bearer Token de votre outil.
 
 **/api/user/{id}/roles**
 
+J'envisage aussi un scheduler qui passerai toute les minutes vérifier la validité des tokens et garder la table la plus clean possible.
+Il se lance dans le terminal avec la command:
 
-D'autres améliorations à venir, je réfléchis à rendre cette API la plus facile à scale en faisant les fonctions les plus sèches possible.
-
-activer le scheduler
 ```bash
 $ php bin/console messenger:consume -v scheduler_default
 ```

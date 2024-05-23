@@ -28,9 +28,6 @@ security:
                 token_extractors:
                     - 'header'
 
-    access_control:
-        - { path: ^/api, roles: ROLE_CONNECTED }
-
 when@test:
     security:
         password_hashers:
