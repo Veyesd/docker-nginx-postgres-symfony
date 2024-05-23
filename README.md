@@ -91,6 +91,7 @@ Vous recevrez un token que vous devrez utiliser une fois connecté,
 Vous devrez utiliser le mode Bearer Token de votre outil.
 La sécurité de l'api est contrôlé par un handler qui check un token Bearer,
 celui ci rafraîchit le token si il est valide, sinon il le détruit et demande la reconnexion.
+La durée de validité du token est configurable dans le JwtService, par défaut je l'ai mise à 15 minutes.
 
 **/api/user/all**
 
